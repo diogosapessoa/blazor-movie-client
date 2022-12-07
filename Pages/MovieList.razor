@@ -25,14 +25,14 @@ else
                         </CardHeaderActions>
                     </MudCardHeader>
                     <MudCardMedia Image="@movie.Poster" Height="444" Title="@movie.TitleAndYear" />
-                    <MudCardActions Class="py-0">
+                    <MudCardActions Class="py-1">
                         <MudRating ReadOnly="true" MaxValue="5" Class="mr-3" SelectedValue="@movie.Stars" />
                         <MudText Typo="Typo.body1" Class="mr-3">@movie.Rating</MudText>
                         <MudToggleIconButton Class="ml-auto" Icon="@Icons.Filled.RemoveRedEye" Color="Color.Inherit" Title="Switch to watched"
                                      ToggledIcon="@Icons.Filled.RemoveRedEye" ToggledColor="Color.Secondary" ToggledTitle="Switch to not watched"
                                      @bind-Toggled="@movie.Watched" @onclick="async () => await ToggleWatchMovieAsync(movie)" />
                     </MudCardActions>
-                    <MudCardContent Class="pt-0">
+                    <MudCardContent Class="pt-1">
                         <MudText Typo="Typo.body2">@movie.PlotTruncated</MudText>
                     </MudCardContent>
                 </MudCard>
