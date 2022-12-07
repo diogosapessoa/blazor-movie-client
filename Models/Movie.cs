@@ -1,7 +1,5 @@
 using System.Text.Json.Serialization;
 
-using static MudBlazor.Colors;
-
 namespace BlazorMovieClient.Models;
 
 public class Movie
@@ -14,6 +12,8 @@ public class Movie
     public string? Genre { get; set; }
     public string? Poster { get; set; }
     public string? MetaScore { get; set; }
+
+    public bool Watched { get; set; }
 
     [JsonIgnore]
     public string TitleAndYear => $"{Title} {Year}";

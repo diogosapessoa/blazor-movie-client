@@ -15,7 +15,7 @@ else
         {
             <MudItem xs="12" sm="6" md="4" lg="4" xl="3">
                 <MudCard>
-                    <MudCardHeader>
+                    <MudCardHeader Class="pb-2">
                         <CardHeaderContent>
                             <MudText Typo="Typo.body1" Class="text-truncate">@movie.TitleAndYear</MudText>
                         </CardHeaderContent>
@@ -25,11 +25,14 @@ else
                         </CardHeaderActions>
                     </MudCardHeader>
                     <MudCardMedia Image="@movie.Poster" Height="444" Title="@movie.TitleAndYear" />
-                    <MudCardContent>
-                        <MudStack Row="true">
-                            <MudRating ReadOnly="true" MaxValue="5" Class="py-3" SelectedValue="@movie.Stars" />
-                            <MudText Typo="Typo.body1" Class="mt-3">@movie.Rating</MudText>
-                        </MudStack>
+                    <MudCardActions Class="py-0">
+                        <MudRating ReadOnly="true" MaxValue="5" Class="mr-3" SelectedValue="@movie.Stars" />
+                        <MudText Typo="Typo.body1" Class="mr-3">@movie.Rating</MudText>
+                        <MudToggleIconButton Class="ml-auto" Icon="@Icons.Filled.RemoveRedEye" Color="Color.Inherit" Title="Switch to watched"
+                                     ToggledIcon="@Icons.Filled.RemoveRedEye" ToggledColor="Color.Secondary" ToggledTitle="Switch to not watched"
+                                     @bind-Toggled="@movie.Watched" @onclick="async () => await ToggleWatchMovieAsync(movie)" />
+                    </MudCardActions>
+                    <MudCardContent Class="pt-0">
                         <MudText Typo="Typo.body2">@movie.PlotTruncated</MudText>
                     </MudCardContent>
                 </MudCard>
@@ -58,6 +61,13 @@ else
     {
         AllMovies?.Remove(movie);
         await _localStorage.RemoveItemAsync($"mv-{movie.ImdbID}");
+        StateHasChanged();
+    }
+
+    private async Task ToggleWatchMovieAsync(Movie movie)
+    {
+        movie.Watched = !movie.Watched;
+        await _localStorage.SetItemAsync($"mv-{movie.ImdbID}", movie);
         StateHasChanged();
     }
 }
