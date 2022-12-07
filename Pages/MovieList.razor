@@ -1,0 +1,58 @@
+﻿@page "/movies"
+
+@using Models;
+
+@inject ILocalStorageService _localStorage;
+
+@if (AllMovies == null)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+}
+else
+{
+    <MudGrid>
+        @foreach (Movie movie in AllMovies)
+        {
+            <MudItem xs="4">
+                <MudCard>
+                    <MudCardMedia Image="@movie.Poster" Height="444" Title="@movie.TitleAndYear" />
+                    <MudCardContent>
+                        <MudStack Row="true" Justify="Justify.FlexStart">
+                            <MudRating ReadOnly="true" MaxValue="5" Class="py-3" SelectedValue="@movie.Stars" />
+                            <MudText Typo="Typo.body1" Class="mt-3">@movie.Rating</MudText>
+                            <MudSpacer />
+                            <MudIconButton Icon="@Icons.Filled.Cancel" Color="Color.Default"
+                                   Title="Remove this movie" @onclick="async () => await RemoveMovieAsync(movie)" />
+                        </MudStack>
+                        <MudText Typo="Typo.h6">@movie.TitleAndYear</MudText>
+                        <MudText Typo="Typo.body2">@movie.Plot</MudText>
+                    </MudCardContent>
+                </MudCard>
+            </MudItem>
+        }
+    </MudGrid>
+}
+
+@code {
+    private List<Movie>? AllMovies { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        IEnumerable<string> keys = await _localStorage.KeysAsync();
+        IEnumerable<string> moviesKeys = keys.Where(k => k.StartsWith("mv-"));
+        var movies = new List<Movie>(moviesKeys.Count());
+        foreach (string key in moviesKeys)
+        {
+            Movie movie = await _localStorage.GetItemAsync<Movie>(key);
+            movies.Add(movie);
+        }
+        AllMovies = movies;
+    }
+
+    private async Task RemoveMovieAsync(Movie movie)
+    {
+        AllMovies?.Remove(movie);
+        await _localStorage.RemoveItemAsync($"mv-{movie.ImdbID}");
+        StateHasChanged();
+    }
+}

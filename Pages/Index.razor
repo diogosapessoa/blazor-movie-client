@@ -1,0 +1,40 @@
+﻿@page "/"
+
+@using Services;
+@using Models
+
+@inject IMovieFinder _movieFind;
+@inject IDialogService _dialog;
+@inject ILocalStorageService _localStorage;
+@inject NavigationManager _navManager;
+
+<MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="@LoadVisibility" />
+<MudStack Justify="Justify.Center" Class="px-10 mx-10 py-10 my-10">
+    <MudSpacer />
+    <MudText Align="Align.Center" Typo="Typo.h2">Movie Database</MudText>
+    <MudSpacer />
+    <MudTextField Counter="80" MaxLength="80" Label="Search by title" Variant="Variant.Outlined" Immediate="true"
+                  ReadOnly="@_movieFind.IsSearching" @bind-Value="TextValue" @onkeydown="OnKeyReturnAsync" />
+</MudStack>
+
+@code {
+    private string? TextValue { get; set; }
+
+    private string LoadVisibility => _movieFind.IsSearching ? "" : "invisible";
+
+    public async Task OnKeyReturnAsync(KeyboardEventArgs e)
+    {
+        if ((e.Code != "Enter" && e.Code != "NumpadEnter") || string.IsNullOrWhiteSpace(TextValue))
+            return;
+
+        Movie? movie = await _movieFind.ByTitleAsync(TextValue);
+        if (movie?.ImdbID == null)
+            await _dialog.ShowMessageBox("Alert",
+                $"Movie with name '{TextValue}' not found, please try another one.", "OK");
+        else
+        {
+            await _localStorage.SetItemAsync($"mv-{movie.ImdbID}", movie);
+            _navManager.NavigateTo($"/movies");
+        }
+    }
+}

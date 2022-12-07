@@ -1,0 +1,47 @@
+﻿@inherits LayoutComponentBase
+
+<MudThemeProvider @ref="@_mudThemeProvider" IsDarkMode="@IsDarkMode" />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout>
+    <MudAppBar Color="Color.Primary" Fixed="true">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" @onclick="ToggleDrawer" />
+        <MudSpacer />
+        <MudToggleIconButton Icon="@Icons.Filled.DarkMode" Color="Color.Inherit" Title="Switch to dark theme"
+                             ToggledIcon="@Icons.Filled.LightMode" ToggledColor="Color.Inherit" ToggledTitle="Switch to light theme"
+                             @bind-Toggled="@IsDarkMode" />
+    </MudAppBar>
+    <MudDrawer @bind-Open="@Open" Elevation="1" ClipMode="DrawerClipMode.Always">
+        <MudNavMenu>
+            <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Filled.Home" IconColor="Color.Inherit" Href="/">Home</MudNavLink>
+            <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Filled.LocalMovies" IconColor="Color.Inherit" Href="/movies">Movies</MudNavLink>
+            <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Custom.Brands.GitHub" IconColor="Color.Inherit"
+                        Href="https://github.com/diogosapessoa/blazor-movie-client">Repository</MudNavLink>
+        </MudNavMenu>
+    </MudDrawer>
+    <MudMainContent Class="p-16">
+        <MudContainer Class="my-6">@Body</MudContainer>
+    </MudMainContent>
+</MudLayout>
+
+@code {
+    private MudThemeProvider? _mudThemeProvider;
+
+    private bool IsDarkMode { get; set; }
+    private bool Open { get; set; } = true;
+
+    private void ToggleDrawer()
+    {
+        Open = !Open;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && _mudThemeProvider != null)
+        {
+            IsDarkMode = await _mudThemeProvider.GetSystemPreference();
+            StateHasChanged();
+        }
+    }
+}
