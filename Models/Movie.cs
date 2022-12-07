@@ -1,5 +1,7 @@
 using System.Text.Json.Serialization;
 
+using static MudBlazor.Colors;
+
 namespace BlazorMovieClient.Models;
 
 public class Movie
@@ -29,7 +31,8 @@ public class Movie
     }
 
     [JsonIgnore]
-    public string Rating => $"{MetaScore}%";
+    public string Rating => $"{MetaScore}/100";
+    public string? PlotTruncated => Plot?[..Math.Min(Plot?.Length ?? 0, 165)];
 
     public override string ToString()
     {

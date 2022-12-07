@@ -15,17 +15,22 @@ else
         {
             <MudItem xs="4">
                 <MudCard>
-                    <MudCardMedia Image="@movie.Poster" Height="444" Title="@movie.TitleAndYear" />
-                    <MudCardContent>
-                        <MudStack Row="true" Justify="Justify.FlexStart">
-                            <MudRating ReadOnly="true" MaxValue="5" Class="py-3" SelectedValue="@movie.Stars" />
-                            <MudText Typo="Typo.body1" Class="mt-3">@movie.Rating</MudText>
-                            <MudSpacer />
+                    <MudCardHeader>
+                        <CardHeaderContent>
+                            <MudText Typo="Typo.body1" Class="text-truncate">@movie.TitleAndYear</MudText>
+                        </CardHeaderContent>
+                        <CardHeaderActions>
                             <MudIconButton Icon="@Icons.Filled.Cancel" Color="Color.Default"
                                    Title="Remove this movie" @onclick="async () => await RemoveMovieAsync(movie)" />
+                        </CardHeaderActions>
+                    </MudCardHeader>
+                    <MudCardMedia Image="@movie.Poster" Height="444" Title="@movie.TitleAndYear" />
+                    <MudCardContent>
+                        <MudStack Row="true">
+                            <MudRating ReadOnly="true" MaxValue="5" Class="py-3" SelectedValue="@movie.Stars" />
+                            <MudText Typo="Typo.body1" Class="mt-3">@movie.Rating</MudText>
                         </MudStack>
-                        <MudText Typo="Typo.h6">@movie.TitleAndYear</MudText>
-                        <MudText Typo="Typo.body2">@movie.Plot</MudText>
+                        <MudText Typo="Typo.body2">@movie.PlotTruncated</MudText>
                     </MudCardContent>
                 </MudCard>
             </MudItem>
