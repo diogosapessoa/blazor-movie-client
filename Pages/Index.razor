@@ -9,10 +9,8 @@
 @inject NavigationManager _navManager;
 
 <MudProgressLinear Color="Color.Secondary" Indeterminate="true" Class="@(_movieFind.IsSearching ? "" : "invisible")" />
-<MudStack Justify="Justify.Center" Class="mt-10 pt-10">
-    <MudSpacer />
+<MudStack Justify="Justify.Center" Spacing="10" Class="my-10 py-10">
     <MudText Align="Align.Center" Typo="Typo.h2">Movie Database</MudText>
-    <MudSpacer />
     <MudTextField Counter="80" MaxLength="80" Label="Search by title" Variant="Variant.Outlined" Immediate="true"
                   ReadOnly="@_movieFind.IsSearching" @bind-Value="TextValue" @onkeydown="OnKeyReturnAsync" />
 </MudStack>

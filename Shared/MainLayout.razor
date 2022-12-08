@@ -5,7 +5,7 @@
 <MudSnackbarProvider />
 
 <MudLayout>
-    <MudAppBar Color="Color.Primary" Fixed="true">
+    <MudAppBar Color="Color.Primary" Fixed="true" Dense="true">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" @onclick="ToggleDrawer" />
         <MudSpacer />
         <MudToggleIconButton Icon="@Icons.Filled.DarkMode" Color="Color.Inherit" Title="Switch to dark theme"
@@ -23,6 +23,9 @@
     <MudMainContent Class="p-16">
         <MudContainer Class="my-6">@Body</MudContainer>
     </MudMainContent>
+    <MudScrollToTop>
+        <MudFab Color="Color.Primary" Icon="@Icons.Filled.KeyboardArrowUp" Title="Scroll to top" />
+    </MudScrollToTop>
 </MudLayout>
 
 @code {
