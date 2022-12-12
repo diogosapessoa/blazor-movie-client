@@ -11,4 +11,6 @@ Get an API KEY from `OmdnApi` and use in service implementation `OmdbFinder.cs`
 
 ## Screenshots
 
-![](./Screenshots/screen-movies.png)
+![](./Screenshots/screen-home.png) 
+![](./Screenshots/screen-movies.png) 
+![](./Screenshots/screen-table.png) 

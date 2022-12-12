@@ -1,8 +1,9 @@
-﻿@page "/movies"
+﻿@page "/cards"
 
+@using Data;
 @using Models;
 
-@inject ILocalStorageService _localStorage;
+@inject IMovieStore _storage;
 
 @if (AllMovies == null)
 {
@@ -46,28 +47,20 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        IEnumerable<string> keys = await _localStorage.KeysAsync();
-        IEnumerable<string> moviesKeys = keys.Where(k => k.StartsWith("mv-"));
-        var movies = new List<Movie>(moviesKeys.Count());
-        foreach (string key in moviesKeys)
-        {
-            Movie movie = await _localStorage.GetItemAsync<Movie>(key);
-            movies.Add(movie);
-        }
-        AllMovies = movies;
+        AllMovies = await _storage.GetAllStartsWithAsync("mv-").ToListAsync();
     }
 
     private async Task RemoveMovieAsync(Movie movie)
     {
         AllMovies?.Remove(movie);
-        await _localStorage.RemoveItemAsync($"mv-{movie.ImdbID}");
+        await _storage.RemoveAsync($"mv-{movie.ImdbID}");
         StateHasChanged();
     }
 
     private async Task ToggleWatchMovieAsync(Movie movie)
     {
         movie.Watched = !movie.Watched;
-        await _localStorage.SetItemAsync($"mv-{movie.ImdbID}", movie);
+        await _storage.SaveOrUpdateAsync($"mv-{movie.ImdbID}", movie);
         StateHasChanged();
     }
 }

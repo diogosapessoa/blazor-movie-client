@@ -7,6 +7,7 @@ namespace BlazorMovieClient.Services
     public sealed class OmdbFinder : IMovieFinder
     {
         public const string Key = "";
+
         public bool IsSearching { get; set; }
         private readonly IHttpClientFactory _httpClientFactory;
 

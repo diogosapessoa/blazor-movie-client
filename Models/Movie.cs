@@ -2,10 +2,16 @@ using System.Text.Json.Serialization;
 
 namespace BlazorMovieClient.Models;
 
-public class Movie
+public sealed class Movie
 {
+    private string? imdbId;
     [JsonPropertyName("imdbID")]
-    public string? ImdbID { get; set; }
+    public string? ImdbID
+    {
+        get => imdbId?.ToUpperInvariant();
+        set => imdbId = value;
+    }
+
     public string? Title { get; set; }
     public string? Plot { get; set; }
     public string? Year { get; set; }
@@ -14,6 +20,9 @@ public class Movie
     public string? MetaScore { get; set; }
 
     public bool Watched { get; set; }
+
+    [JsonIgnore]
+    public string? WatchedText => Watched ? "Yes" : "No";
 
     [JsonIgnore]
     public string TitleAndYear => $"{Title} {Year}";
@@ -32,6 +41,8 @@ public class Movie
 
     [JsonIgnore]
     public string Rating => $"{MetaScore}/100";
+
+    [JsonIgnore]
     public string? PlotTruncated => Plot?[..Math.Min(Plot?.Length ?? 0, 165)];
 
     public override string ToString()

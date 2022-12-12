@@ -1,18 +1,21 @@
 ﻿@page "/"
 
+@using Data;
 @using Services;
 @using Models
 
 @inject IMovieFinder _movieFind;
 @inject IDialogService _dialog;
-@inject ILocalStorageService _localStorage;
+@inject IMovieStore _storage;
 @inject NavigationManager _navManager;
 
 <MudProgressLinear Color="Color.Secondary" Indeterminate="true" Class="@(_movieFind.IsSearching ? "" : "invisible")" />
 <MudStack Justify="Justify.Center" Spacing="10" Class="my-10 py-10">
     <MudText Align="Align.Center" Typo="Typo.h2">Movie Database</MudText>
+    <MudFocusTrap DefaultFocus="DefaultFocus.FirstChild">
     <MudTextField Counter="80" MaxLength="80" Label="Search by title" Variant="Variant.Outlined" Immediate="true"
                   ReadOnly="@_movieFind.IsSearching" @bind-Value="TextValue" @onkeydown="OnKeyReturnAsync" />
+    </MudFocusTrap>
 </MudStack>
 
 @code {
@@ -29,8 +32,8 @@
                 $"Movie with name '{TextValue}' not found, please try another one.", "OK");
         else
         {
-            await _localStorage.SetItemAsync($"mv-{movie.ImdbID}", movie);
-            _navManager.NavigateTo($"/movies");
+            await _storage.SaveOrUpdateAsync($"mv-{movie.ImdbID}", movie);
+            _navManager.NavigateTo($"/cards");
         }
     }
 }

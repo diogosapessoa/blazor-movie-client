@@ -1,0 +1,64 @@
+﻿@page "/table"
+
+@using Data;
+@using Models;
+
+@inject IMovieStore _storage;
+
+@if (AllMovies == null)
+{
+    <MudProgressLinear Color="Color.Secondary" Indeterminate="true" />
+}
+else
+{
+    <MudTable Items="@AllMovies" Hover="true" Bordered="true" Virtualize="true" AllowUnsorted="false"
+              HorizontalScrollbar="true" OnRowClick="RowClickEvent" T="Movie">
+        <HeaderContent>
+            <MudTh Style="text-align:center">
+                <MudTableSortLabel SortBy="Filter(m => m.ImdbID)">ImdbID</MudTableSortLabel>
+            </MudTh>
+            <MudTh>
+                <MudTableSortLabel SortBy="Filter(m => m.Title)">Title</MudTableSortLabel>
+            </MudTh>
+            <MudTh Style="text-align:right">
+                <MudTableSortLabel SortBy="Filter(m => m.Year)">Year</MudTableSortLabel>
+            </MudTh>
+            <MudTh>
+                <MudTableSortLabel SortBy="Filter(m => m.Watched)">Watched</MudTableSortLabel>
+            </MudTh>
+            <MudTh Style="text-align:center">
+                <MudTableSortLabel SortBy="Filter(m => m.Stars)">Stars</MudTableSortLabel>
+            </MudTh>
+        </HeaderContent>
+        <RowTemplate>
+         <MudTd DataLabel="ImdbID" Style="text-align:center">@context.ImdbID</MudTd>
+            <MudTd DataLabel="Title">@context.Title</MudTd>
+            <MudTd DataLabel="Year" Style="text-align:right">@context.Year</MudTd>
+            <MudTd DataLabel="Watched">@context.WatchedText</MudTd>
+            <MudTd DataLabel="Stars" Style="text-align:center">
+                <MudRating ReadOnly="true" MaxValue="5" SelectedValue="@context.Stars" />
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new int[] { 5, 10, 25, 100 }" />
+        </PagerContent>
+    </MudTable>
+}
+@code {
+    private List<Movie>? AllMovies { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        AllMovies = await _storage.GetAllStartsWithAsync("mv-").ToListAsync();
+    }
+
+    private void RowClickEvent(TableRowClickEventArgs<Movie> e)
+    {
+        Console.WriteLine(e.Item);
+    }
+
+    private Func<Movie, object?> Filter(Func<Movie, object?> selector)
+    {
+        return new Func<Movie, object?>(selector);
+    }
+}

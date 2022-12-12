@@ -1,6 +1,7 @@
 using Blazored.LocalStorage;
 
 using BlazorMovieClient;
+using BlazorMovieClient.Data;
 using BlazorMovieClient.Services;
 
 using Microsoft.AspNetCore.Components.Web;
@@ -18,5 +19,6 @@ builder.Services.AddMudServices();
 builder.Services.AddBlazoredLocalStorage();
 
 builder.Services.AddScoped<IMovieFinder, OmdbFinder>();
+builder.Services.AddScoped<IMovieStore, MovieLocalStorage>();
 
 await builder.Build().RunAsync();
