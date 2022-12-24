@@ -1,4 +1,9 @@
-﻿@inherits LayoutComponentBase
+﻿@using Dialogs
+
+@inherits LayoutComponentBase
+
+@inject IDialogService _dialog
+@inject ILocalStorageService _localStorage
 
 <MudThemeProvider @ref="@_mudThemeProvider" IsDarkMode="@IsDarkMode" />
 <MudDialogProvider />
@@ -11,9 +16,10 @@
         <MudToggleIconButton Icon="@Icons.Filled.DarkMode" Color="Color.Inherit" Title="Switch to dark theme"
                              ToggledIcon="@Icons.Filled.LightMode" ToggledColor="Color.Inherit" ToggledTitle="Switch to light theme"
                              @bind-Toggled="@IsDarkMode" />
+        <MudIconButton Icon="@Icons.Filled.Settings" Color="Color.Inherit" Title="Open settings dialog" @onclick="ShowSettingsAsync" />
     </MudAppBar>
     <MudDrawer @bind-Open="@Open" Elevation="1" ClipMode="DrawerClipMode.Always">
-        <MudNavMenu Bordered="true" Dense="true" Margin="Margin.Dense" Color="Color.Secondary">
+        <MudNavMenu Bordered="true" Dense="false" Margin="Margin.Dense" Color="Color.Secondary">
             <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Filled.Home" IconColor="Color.Inherit" Href="/">Home</MudNavLink>
             <MudNavGroup Title="Movies" Icon="@Icons.Filled.LocalMovies" Expanded="@MovieExpanded">
                 <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Filled.CreditCard" IconColor="Color.Inherit" Href="/cards">Cards</MudNavLink>
@@ -51,4 +57,12 @@
             StateHasChanged();
         }
     }
+
+    private async Task ShowSettingsAsync()
+    {
+        await _dialog.ShowAsync<Settings>("Settings", new DialogOptions
+        {
+            FullWidth = true,
+        });
+   }
 }

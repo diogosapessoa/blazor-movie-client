@@ -4,13 +4,12 @@ Blazor webAssembly client application using [MudBlazor](https://mudblazor.com/) 
 
 ## Configuration
 
-Get an API KEY from `OmdnApi` and use in service implementation `OmdbFinder.cs`
+Get an API KEY from `OmdnApi` and enter settings value
 
-- 📂Services 
-  - 🗒️[OmdbFinder.cs](./Services/OmdbFinder.cs) 
+![](./Screenshots/screen-settings.png) 
 
 ## Screenshots
 
 ![](./Screenshots/screen-home.png) 
-![](./Screenshots/screen-movies.png) 
+![](./Screenshots/screen-cards.png) 
 ![](./Screenshots/screen-table.png) 

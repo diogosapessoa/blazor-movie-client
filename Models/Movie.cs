@@ -4,6 +4,9 @@ namespace BlazorMovieClient.Models;
 
 public sealed class Movie
 {
+    public bool Response { get; set; }
+    public string? Error { get; set; }
+
     private string? imdbId;
     [JsonPropertyName("imdbID")]
     public string? ImdbID

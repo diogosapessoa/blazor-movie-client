@@ -1,0 +1,32 @@
+﻿@inject ILocalStorageService _localStorage
+
+<MudDialog>
+    <TitleContent>
+        <MudText>Settings</MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudTextField Variant="Variant.Outlined" Label="The movie service api key" Immediate="true" 
+                      @bind-Value="@MovieServiceKey" />
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="ConfirAsync">Confirm</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance? MudDialog { get; set; }
+
+    private string? MovieServiceKey { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        MovieServiceKey = await _localStorage.GetItemAsStringAsync("apikey");
+    }
+
+    private async Task ConfirAsync()
+    {
+        if(!string.IsNullOrEmpty(MovieServiceKey))
+            await _localStorage.SetItemAsStringAsync("apikey", MovieServiceKey);
+        MudDialog?.Close();
+    }
+}

@@ -1,13 +1,13 @@
 ﻿@page "/"
 
-@using Data;
-@using Services;
+@using Data
+@using Services
 @using Models
 
-@inject IMovieFinder _movieFind;
-@inject IDialogService _dialog;
-@inject IMovieStore _storage;
-@inject NavigationManager _navManager;
+@inject IMovieFinder _movieFind
+@inject IDialogService _dialog
+@inject IMovieStore _storage
+@inject NavigationManager _navManager
 
 <MudProgressLinear Color="Color.Secondary" Indeterminate="true" Class="@(_movieFind.IsSearching ? "" : "invisible")" />
 <MudStack Justify="Justify.Center" Spacing="10" Class="my-10 py-10">
@@ -27,9 +27,15 @@
             return;
 
         Movie? movie = await _movieFind.ByTitleAsync(TextValue);
-        if (movie?.ImdbID == null)
+
+        var options = new DialogOptions { FullWidth = true };
+        if(!(movie?.Response ?? false))
+        {
+            await _dialog.ShowMessageBox("Alert", "Unable to query, check the api key.", "OK", null, null, options);
+        }
+        else if (movie?.ImdbID == null)
             await _dialog.ShowMessageBox("Alert",
-                $"Movie with name '{TextValue}' not found, please try another one.", "OK");
+                $"Movie with name '{TextValue}' not found, please try another one.", "OK", null, null, options);
         else
         {
             await _storage.SaveOrUpdateAsync($"mv-{movie.ImdbID}", movie);

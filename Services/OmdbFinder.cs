@@ -1,4 +1,6 @@
-﻿using BlazorMovieClient.Models;
+﻿using Blazored.LocalStorage;
+
+using BlazorMovieClient.Models;
 
 using System.Net.Http.Json;
 
@@ -6,14 +8,15 @@ namespace BlazorMovieClient.Services
 {
     public sealed class OmdbFinder : IMovieFinder
     {
-        public const string Key = "";
-
         public bool IsSearching { get; set; }
-        private readonly IHttpClientFactory _httpClientFactory;
 
-        public OmdbFinder(IHttpClientFactory httpClientFactory)
+        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly ILocalStorageService _localStorage;
+
+        public OmdbFinder(IHttpClientFactory httpClientFactory, ILocalStorageService localStorage)
         {
             _httpClientFactory = httpClientFactory;
+            _localStorage = localStorage;
         }
 
         public async Task<Movie?> ByTitleAsync(string title)
@@ -33,8 +36,9 @@ namespace BlazorMovieClient.Services
 
             try
             {
+                string key = await _localStorage.GetItemAsStringAsync("apikey");
                 HttpClient client = _httpClientFactory.CreateClient("Omdb");
-                return await client.GetFromJsonAsync<Movie>($"{resource}&apikey={Key}");
+                return await client.GetFromJsonAsync<Movie>($"{resource}&apikey={key}");
             }
             catch (Exception ex)
             {
