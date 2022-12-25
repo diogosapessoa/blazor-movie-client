@@ -5,8 +5,9 @@
         <MudText>Settings</MudText>
     </TitleContent>
     <DialogContent>
-        <MudTextField Variant="Variant.Outlined" Label="The movie service api key" Immediate="true" 
-                      @bind-Value="@MovieServiceKey" />
+        <MudTextField Variant="Variant.Outlined" Label="The movie service api key" Immediate="true" InputType="@_inputType"
+                      Adornment="Adornment.End" AdornmentIcon="@_keyIcon" OnAdornmentClick="AdormentClicked"
+                      @bind-Value="@_movieServiceKey" />
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="ConfirAsync">Confirm</MudButton>
@@ -16,17 +17,33 @@
 @code {
     [CascadingParameter] MudDialogInstance? MudDialog { get; set; }
 
-    private string? MovieServiceKey { get; set; }
+    private string? _movieServiceKey;
+    private string? _keyIcon = Icons.Material.Filled.Visibility;
+    private InputType _inputType = InputType.Password;
 
     protected override async Task OnInitializedAsync()
     {
-        MovieServiceKey = await _localStorage.GetItemAsStringAsync("apikey");
+        _movieServiceKey = await _localStorage.GetItemAsStringAsync("apikey");
     }
 
     private async Task ConfirAsync()
     {
-        if(!string.IsNullOrEmpty(MovieServiceKey))
-            await _localStorage.SetItemAsStringAsync("apikey", MovieServiceKey);
+        if(!string.IsNullOrEmpty(_movieServiceKey))
+            await _localStorage.SetItemAsStringAsync("apikey", _movieServiceKey);
         MudDialog?.Close();
+    }
+
+    private void AdormentClicked()
+    {
+        if(_inputType == InputType.Password)
+        {
+            _inputType = InputType.Text;
+            _keyIcon = Icons.Material.Filled.VisibilityOff;
+        }
+        else
+        {
+            _inputType = InputType.Password;
+            _keyIcon = Icons.Material.Filled.Visibility;
+        }
     }
 }

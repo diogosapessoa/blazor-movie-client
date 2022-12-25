@@ -5,13 +5,13 @@
 
 @inject IMovieStore _storage
 
-@if (AllMovies == null)
+@if (_allMovies == null)
 {
     <MudProgressLinear Color="Color.Secondary" Indeterminate="true" />
 }
 else
 {
-    <MudTable Items="@AllMovies" Hover="true" Bordered="true" Virtualize="true" AllowUnsorted="false"
+    <MudTable Items="@_allMovies" Hover="true" Bordered="true" Virtualize="true" AllowUnsorted="false"
               HorizontalScrollbar="true" OnRowClick="RowClickEvent" T="Movie">
         <HeaderContent>
             <MudTh Style="text-align:center">
@@ -45,11 +45,11 @@ else
     </MudTable>
 }
 @code {
-    private List<Movie>? AllMovies { get; set; }
+    private List<Movie>? _allMovies;
 
     protected override async Task OnInitializedAsync()
     {
-        AllMovies = await _storage.GetAllStartsWithAsync("mv-").ToListAsync();
+        _allMovies = await _storage.GetAllStartsWithAsync("mv-").ToListAsync();
     }
 
     private void RowClickEvent(TableRowClickEventArgs<Movie> e)

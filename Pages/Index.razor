@@ -13,20 +13,21 @@
 <MudStack Justify="Justify.Center" Spacing="10" Class="my-10 py-10">
     <MudText Align="Align.Center" Typo="Typo.h2">Movie Database</MudText>
     <MudFocusTrap DefaultFocus="DefaultFocus.FirstChild">
-    <MudTextField Counter="80" MaxLength="80" Label="Search by title" Variant="Variant.Outlined" Immediate="true"
-                  ReadOnly="@_movieFind.IsSearching" @bind-Value="TextValue" @onkeydown="OnKeyReturnAsync" />
+        <MudTextField Counter="80" MaxLength="80" Label="Search by title" Variant="Variant.Outlined" Adornment="Adornment.End" 
+                      AdornmentIcon="@Icons.Filled.Search" Immediate="true" 
+                      ReadOnly="@_movieFind.IsSearching" @bind-Value="_textValue" @onkeydown="OnKeyReturnAsync" />
     </MudFocusTrap>
 </MudStack>
 
 @code {
-    private string? TextValue { get; set; }
+    private string? _textValue;
 
     public async Task OnKeyReturnAsync(KeyboardEventArgs e)
     {
-        if ((e.Code != "Enter" && e.Code != "NumpadEnter") || string.IsNullOrWhiteSpace(TextValue))
+        if ((e.Code != "Enter" && e.Code != "NumpadEnter") || string.IsNullOrWhiteSpace(_textValue))
             return;
 
-        Movie? movie = await _movieFind.ByTitleAsync(TextValue);
+        Movie? movie = await _movieFind.ByTitleAsync(_textValue);
 
         var options = new DialogOptions { FullWidth = true };
         if(!(movie?.Response ?? false))
@@ -35,7 +36,7 @@
         }
         else if (movie?.ImdbID == null)
             await _dialog.ShowMessageBox("Alert",
-                $"Movie with name '{TextValue}' not found, please try another one.", "OK", null, null, options);
+                $"Movie with name '{_textValue}' not found, please try another one.", "OK", null, null, options);
         else
         {
             await _storage.SaveOrUpdateAsync($"mv-{movie.ImdbID}", movie);
