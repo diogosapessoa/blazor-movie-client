@@ -1,9 +1,12 @@
+using BlazorMovieClient.Converters;
+
 using System.Text.Json.Serialization;
 
 namespace BlazorMovieClient.Models;
 
 public sealed class Movie
 {
+    [JsonConverter(typeof(StringToBoolJsonConverter))]
     public bool Response { get; set; }
     public string? Error { get; set; }
 

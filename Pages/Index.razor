@@ -14,7 +14,7 @@
     <MudText Align="Align.Center" Typo="Typo.h2">Movie Database</MudText>
     <MudFocusTrap DefaultFocus="DefaultFocus.FirstChild">
         <MudTextField Counter="80" MaxLength="80" Label="Search by title" Variant="Variant.Outlined" Adornment="Adornment.End" 
-                      AdornmentIcon="@Icons.Filled.Search" Immediate="true" 
+                      AdornmentIcon="@Icons.Filled.Search" Immediate="true" OnAdornmentClick="OnAdornmentClick"
                       ReadOnly="@_movieFind.IsSearching" @bind-Value="_textValue" @onkeydown="OnKeyReturnAsync" />
     </MudFocusTrap>
 </MudStack>
@@ -22,17 +22,28 @@
 @code {
     private string? _textValue;
 
-    public async Task OnKeyReturnAsync(KeyboardEventArgs e)
+    private async Task OnKeyReturnAsync(KeyboardEventArgs e)
     {
         if ((e.Code != "Enter" && e.Code != "NumpadEnter") || string.IsNullOrWhiteSpace(_textValue))
             return;
 
-        Movie? movie = await _movieFind.ByTitleAsync(_textValue);
+        await SearchMovie(_textValue);
+    }
+
+    private async Task OnAdornmentClick()
+    {
+        if (!string.IsNullOrWhiteSpace(_textValue))
+            await SearchMovie(_textValue);
+    }
+
+    private async Task SearchMovie(string movieName)
+    {
+        Movie? movie = await _movieFind.ByTitleAsync(movieName);
 
         var options = new DialogOptions { FullWidth = true };
         if(!(movie?.Response ?? false))
         {
-            await _dialog.ShowMessageBox("Alert", "Unable to query, check the api key.", "OK", null, null, options);
+            await _dialog.ShowMessageBox("Alert", movie?.Error, "OK", null, null, options);
         }
         else if (movie?.ImdbID == null)
             await _dialog.ShowMessageBox("Alert",
