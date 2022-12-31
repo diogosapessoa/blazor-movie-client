@@ -14,7 +14,7 @@
     <MudText Align="Align.Center" Typo="Typo.h2">Movie Database</MudText>
     <MudFocusTrap DefaultFocus="DefaultFocus.FirstChild">
         <MudTextField Counter="80" MaxLength="80" Label="Search by title" Variant="Variant.Outlined" Adornment="Adornment.End" 
-                      AdornmentIcon="@Icons.Filled.Search" Immediate="true" OnAdornmentClick="OnAdornmentClick"
+                      AdornmentIcon="@Icons.Filled.Search" Immediate="true" OnAdornmentClick="OnAdornmentClickAsync"
                       ReadOnly="@_movieFind.IsSearching" @bind-Value="_textValue" @onkeydown="OnKeyReturnAsync" />
     </MudFocusTrap>
 </MudStack>
@@ -27,16 +27,16 @@
         if ((e.Code != "Enter" && e.Code != "NumpadEnter") || string.IsNullOrWhiteSpace(_textValue))
             return;
 
-        await SearchMovie(_textValue);
+        await SearchMovieAsync(_textValue);
     }
 
-    private async Task OnAdornmentClick()
+    private async Task OnAdornmentClickAsync()
     {
         if (!string.IsNullOrWhiteSpace(_textValue))
-            await SearchMovie(_textValue);
+            await SearchMovieAsync(_textValue);
     }
 
-    private async Task SearchMovie(string movieName)
+    private async Task SearchMovieAsync(string movieName)
     {
         Movie? movie = await _movieFind.ByTitleAsync(movieName);
 
